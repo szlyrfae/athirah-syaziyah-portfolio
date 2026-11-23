@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f7f2">
+  <meta name="description" content="Athirah Syaziyah 'Azman — mobile computing student, Flutter developer, and curious maker.">
+  <title>Athirah Syaziyah — Portfolio</title>
+  <style>
+    :root { color-scheme:light; --paper:#f8f7f2; --white:#fffefa; --ink:#262a25; --muted:#71756d; --soft-ink:#62675e; --line:#dedfd5; --olive:#697948; --deep-olive:#465333; --olive-light:#e8ebdb; --yellow:#f4dd82; --yellow-ink:#615736; --pink:#f4d8d0; --blue:#d9e9e5; --tag-bg:#f0f0e9; --tag-ink:#606459; --label-bg:rgba(255,254,250,.9); --label-ink:#505449; --nav-glass:rgba(248,247,242,.9); --serif:Georgia,"Times New Roman",serif; --sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"SFMono-Regular",Consolas,monospace; --radius:20px; }
+    html[data-theme="dark"] { color-scheme:dark; --paper:#171a16; --white:#222720; --ink:#eff0e9; --muted:#aeb3a7; --soft-ink:#c1c5bb; --line:#394036; --olive:#becd97; --deep-olive:#d4e1b5; --olive-light:#2c3427; --yellow:#51472c; --yellow-ink:#f1dfac; --pink:#45332f; --blue:#293a37; --tag-bg:#30372f; --tag-ink:#d7dacd; --label-bg:rgba(34,39,32,.92); --label-ink:#ebeee4; --nav-glass:rgba(23,26,22,.9); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:82px; }
+    body { margin:0; overflow-x:clip; background:var(--paper); color:var(--ink); font:16px/1.65 var(--sans); transition:background-color .3s,color .3s; }
+    a { color:inherit; text-decoration:none; }
+    button,input { font:inherit; }
+    button:focus-visible,a:focus-visible,input:focus-visible { outline:3px solid #8a9a5e; outline-offset:4px; }
+    img,video { display:block; max-width:100%; }
+    .shell { width:min(1080px,calc(100% - 48px)); margin-inline:auto; }
+    .topbar { position:sticky; top:0; z-index:10; background:var(--nav-glass); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+    .nav { min-height:72px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .brand { display:inline-flex; align-items:center; gap:10px; font-weight:700; letter-spacing:-.04em; }
+    .brand-mark { width:31px; height:31px; display:grid; place-items:center; border-radius:50% 50% 50% 10px; background:var(--olive); color:white; font:italic 19px var(--serif); transform:rotate(-7deg); transition:transform .35s cubic-bezier(.2,.8,.2,1); }
+    .brand:hover .brand-mark { transform:rotate(8deg) scale(1.08); }
+    .nav-links { display:flex; gap:clamp(16px,3vw,30px); color:var(--muted); font-size:13px; }
+    .nav-actions { display:flex; align-items:center; gap:8px; }
+    .theme-toggle { min-height:43px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:0 12px; border:1px solid var(--line); border-radius:99px; background:var(--white); color:var(--ink); cursor:pointer; font-size:12px; font-weight:650; transition:background .2s,transform .2s; }
+    .theme-toggle:hover { transform:translateY(-2px); background:var(--olive-light); }
+    .nav-links a:hover,.nav-links a.active { color:var(--olive); }
+    .nav-cta,.button { min-height:43px; display:inline-flex; align-items:center; justify-content:center; gap:9px; padding:0 16px; border:1px solid var(--ink); border-radius:99px; font-size:13px; font-weight:650; transition:transform .2s,background .2s; }
+    .nav-cta:hover,.button:hover { transform:translateY(-2px); background:var(--yellow); }
+    .button.primary { background:var(--ink); color:var(--white); }
+    .button.primary:hover { background:var(--olive); border-color:var(--olive); }
+    .button.soft { border-color:var(--line); background:var(--white); }
+    .arrow { font-size:16px; line-height:1; }
+    .eyebrow { color:var(--olive); font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { max-width:630px; margin:17px 0 20px; font-size:clamp(54px,8vw,91px); line-height:.98; letter-spacing:-.08em; font-weight:560; }
+    h1 em,h2 em { color:var(--olive); font-family:var(--serif); font-weight:400; letter-spacing:-.06em; }
+    .hero { min-height:630px; display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap:50px; padding:82px 0 78px; }
+    .hero-lede { max-width:540px; color:var(--soft-ink); font-size:18px; }
+    .hero-lede strong { color:var(--ink); font-weight:630; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:27px; }
+    .socials { display:flex; align-items:center; flex-wrap:wrap; gap:18px; margin-top:22px; color:var(--muted); font-size:13px; }
+    .socials a { text-decoration:underline; text-decoration-color:#c5c8bb; text-underline-offset:4px; }
+    .socials a:hover { color:var(--olive); }
+    .hero-art { min-height:430px; position:relative; display:grid; place-items:center; isolation:isolate; }
+    .hero-art.is-roaming { z-index:40; isolation:auto; transform:none!important; }
+    .hero-art::before { content:""; position:absolute; z-index:-1; width:min(350px,80vw); aspect-ratio:1; border:1px solid #cdd2bf; border-radius:48% 52% 61% 39% / 47% 43% 57% 53%; transform:rotate(-14deg); }
+    .hero-art::after { content:""; position:absolute; z-index:-1; width:min(315px,73vw); aspect-ratio:1; border:1px dashed #d5b6a9; border-radius:46% 54% 45% 55%; transform:rotate(22deg); }
+    .lanyard-rig { position:relative; width:320px; height:420px; max-width:100%; }
+    .hero-art.is-roaming .lanyard-rig { transform:none!important; }
+    .lanyard-cord { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+    .lanyard-cord.is-roaming { position:fixed; inset:0; z-index:50; width:100vw; height:100vh; }
+    .lanyard-cord path { fill:none; stroke-width:13; stroke-linecap:round; }
+    .lanyard-cord .strap-left { stroke:#394036; }
+    .lanyard-cord .strap-right { stroke:#b8483d; }
+    .lanyard-cord .stitch { stroke:#f5eadd; stroke-width:1.8; stroke-dasharray:3 6; }
+    .lanyard-hook { position:absolute; top:87px; left:calc(50% - 13px); width:26px; height:22px; border:3px solid #a69b7b; border-radius:7px 7px 11px 11px; background:#e8e2d1; }
+    .lanyard-badge { --pull-y:0px; --sway:0deg; position:absolute; top:100px; left:calc(50% - 88.5px); z-index:1; width:177px; height:300px; padding:0; overflow:hidden; border:1px solid #e5e1d5; border-radius:8px; background:#fff; box-shadow:0 18px 40px rgba(40,45,35,.18); transform:translateY(var(--pull-y)) rotate(var(--sway)); transform-origin:50% 12px; cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none; transition:transform .65s cubic-bezier(.2,.75,.2,1); }
+    .lanyard-badge.is-dragging { cursor:grabbing; transition:none; }
+    .lanyard-badge.is-roaming { position:fixed; z-index:51; margin:0; transform:rotate(var(--sway)); transform-origin:50% 12px; transition:none; }
+    .lanyard-badge.is-roaming:not(.is-dragging) { cursor:grab; }
+    .lanyard-badge.is-swinging { animation:badge-release .68s cubic-bezier(.2,.7,.25,1); }
+    .lanyard-badge:focus-visible { outline:3px solid #8a9a5e; outline-offset:8px; }
+    .id-card-image { display:block; width:100%; height:100%; object-fit:fill; pointer-events:none; }
+    .lanyard-hint { position:absolute; z-index:3; left:50%; bottom:-24px; width:max-content; max-width:100%; padding:6px 11px; border-radius:99px; background:color-mix(in srgb,var(--white) 86%,transparent); color:var(--muted); font-size:12px; text-align:center; white-space:nowrap; transform:translateX(-50%); }
+    .interaction-hint { color:var(--olive); font-family:var(--mono); font-size:10px; font-weight:650; letter-spacing:.12em; text-transform:uppercase; }
+    .filter-hint { align-self:center; margin-left:2px; white-space:nowrap; }
+    .lanyard-hint span { color:var(--olive); }
+    @keyframes badge-release { 0%{transform:translateY(0) rotate(0)} 24%{transform:translateY(-7px) rotate(-5deg)} 52%{transform:translateY(3px) rotate(3deg)} 76%{transform:translateY(-2px) rotate(-1.5deg)} 100%{transform:translateY(0) rotate(0)} }
+    .spark { position:absolute; z-index:2; color:var(--olive); font-size:25px; pointer-events:none; }
+    .spark.a { top:42px; left:8%; transform:rotate(12deg); animation:twinkle 3.6s ease-in-out infinite; }
+    .spark.b { right:8%; bottom:78px; color:#c87f68; font-size:18px; animation:twinkle 4.2s ease-in-out -1.4s infinite; }
+    @keyframes twinkle { 0%,100% { opacity:.65; scale:.88; rotate:-8deg; } 50% { opacity:1; scale:1.12; rotate:10deg; } }
+    .caption { color:var(--muted); font-size:13px; }
+    .section { padding:96px 0; border-top:1px solid var(--line); }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:36px; }
+    h2 { margin:10px 0 0; font-size:clamp(36px,5vw,57px); line-height:1.06; letter-spacing:-.065em; font-weight:540; }
+    .section-intro { max-width:420px; margin:0; color:var(--muted); font-size:16px; }
+    .about-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:60px; }
+    .aside-note { position:relative; align-self:start; padding:27px; border-radius:var(--radius); background:var(--olive-light); }
+    .aside-note::after { content:"✳"; position:absolute; top:-17px; right:20px; color:#9d715e; font-size:28px; transform:rotate(14deg); }
+    .aside-note blockquote { margin:0; font:clamp(24px,3vw,31px)/1.28 var(--serif); letter-spacing:-.035em; }
+    .aside-note blockquote em { color:var(--olive); }
+    .aside-note p { margin:19px 0 0; color:var(--soft-ink); font-size:13px; }
+    .about-copy p { color:var(--soft-ink); }
+    .facts { display:grid; grid-template-columns:repeat(3,1fr); margin-top:24px; border-top:1px solid var(--line); }
+    .fact { padding:15px 10px 0 0; }
+    .fact b { display:block; color:var(--olive); font:26px var(--serif); }
+    .fact span { color:var(--muted); font-size:12px; }
+    .work-tools { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:23px; }
+    .filter-group { display:flex; flex-wrap:wrap; gap:7px; }
+    .filter { min-height:36px; padding:0 13px; border:1px solid var(--line); border-radius:99px; background:transparent; color:var(--muted); cursor:pointer; font-size:12px; transition:transform .2s,background .2s,border-color .2s,color .2s; }
+    .filter:hover { transform:translateY(-2px); }
+    .filter:hover,.filter[aria-pressed="true"] { border-color:var(--olive); background:var(--olive-light); color:var(--deep-olive); }
+    .search { width:min(225px,50vw); min-height:38px; padding:0 14px; border:1px solid var(--line); border-radius:99px; background:var(--white); color:var(--ink); font-size:13px; }
+    .search::placeholder { color:#9b9e95; }
+    .project-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px; }
+    .project-card { display:flex; flex-direction:column; padding:12px; border:1px solid var(--line); border-radius:var(--radius); background:var(--white); color:inherit; text-align:left; cursor:pointer; transition:transform .2s,box-shadow .2s; }
+    .project-card:hover { transform:translateY(-4px); box-shadow:0 13px 28px rgba(55,58,45,.08); }
+    .project-card[hidden] { display:none; }
+    .project-image { position:relative; overflow:hidden; height:225px; border-radius:14px; background:var(--blue); }
+    .project-image img { width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+    .project-card:hover .project-image img { transform:scale(1.035); }
+    .image-label { position:absolute; right:10px; bottom:10px; padding:5px 9px; border:1px solid rgba(255,255,255,.25); border-radius:99px; background:var(--label-bg); color:var(--label-ink); font:10px var(--mono); }
+    .project-body { padding:17px 8px 9px; }
+    .project-meta { display:flex; justify-content:space-between; gap:10px; color:var(--muted); font:10px var(--mono); letter-spacing:.04em; text-transform:uppercase; }
+    .project-body h3 { margin:9px 0 5px; font:25px/1.15 var(--serif); letter-spacing:-.04em; }
+    .project-body p { min-height:49px; margin:0; color:var(--soft-ink); font-size:14px; }
+    .tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+    .tag { padding:4px 8px; border-radius:99px; background:var(--tag-bg); color:var(--tag-ink); font-size:10px; transition:transform .2s,background .2s; }
+    .project-card:hover .tag { transform:translateY(-2px); }
+    .card-link { display:inline-flex; gap:7px; margin-top:12px; color:var(--olive); font-size:12px; font-weight:650; }
+    .empty { display:none; padding:22px; color:var(--muted); text-align:center; }
+    .empty.show { display:block; }
+    .award-layout { display:grid; grid-template-columns:1fr .95fr; gap:28px; align-items:center; }
+    .award-photo { position:relative; padding:11px; border:1px solid var(--line); border-radius:24px; background:var(--white); transform:rotate(-1.2deg); box-shadow:0 14px 30px rgba(50,52,44,.07); }
+    .award-photo img { width:100%; height:440px; object-fit:cover; object-position:center 48%; border-radius:15px; }
+    .award-photo figcaption { padding:10px 3px 0; color:var(--muted); font-size:11px; }
+    .award-copy { padding:10px 0 10px 12px; }
+    .award-label { display:inline-block; padding:6px 11px; border-radius:99px; background:var(--yellow); color:var(--yellow-ink); font:10px var(--mono); text-transform:uppercase; }
+    .award-copy h3 { margin:17px 0 8px; font:36px/1.1 var(--serif); letter-spacing:-.05em; }
+    .award-copy p { color:var(--soft-ink); }
+    .award-copy .small-note { margin-top:20px; padding-left:14px; border-left:2px solid #d8b7a9; color:var(--muted); font-size:13px; }
+    .motion-card { display:grid; grid-template-columns:1.15fr .85fr; gap:26px; align-items:center; margin-top:48px; padding:18px; border:1px solid var(--line); border-radius:24px; background:var(--white); }
+    .motion-card video { width:100%; max-height:360px; border-radius:15px; background:#e7e6dd; }
+    .motion-copy { padding:12px 12px 12px 0; }
+    .motion-copy h3 { margin:10px 0 8px; font:29px var(--serif); letter-spacing:-.04em; }
+    .motion-copy p { color:var(--muted); font-size:14px; }
+    .motion-copy .caption { font-size:11px; }
+    .journey-grid { display:grid; grid-template-columns:1fr 1fr; gap:50px; }
+    .subhead { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .subhead h3 { margin:0; font:24px var(--serif); }
+    .subhead span { color:var(--muted); font:10px var(--mono); text-transform:uppercase; }
+    .timeline { border-left:1px solid #bdc5a7; }
+    .timeline-item { position:relative; margin:0 0 20px 19px; padding:0 0 20px; border-bottom:1px solid var(--line); }
+    .timeline-item:last-child { border-bottom:0; margin-bottom:0; }
+    .timeline-item::before { content:""; position:absolute; left:-24px; top:6px; width:8px; height:8px; border:2px solid var(--olive); border-radius:50%; background:var(--paper); }
+    .timeline-date { color:var(--olive); font:10px var(--mono); text-transform:uppercase; }
+    .timeline-item h4 { margin:5px 0 2px; font-size:15px; letter-spacing:-.02em; }
+    .timeline-place { color:var(--muted); font-size:13px; }
+    .timeline-item p { margin:8px 0 0; color:var(--soft-ink); font-size:13px; }
+    .skills-wrap { display:grid; grid-template-columns:.75fr 1.25fr; gap:45px; }
+    .skills-intro { max-width:350px; color:var(--muted); }
+    .skill-list { border-top:1px solid var(--line); }
+    .skill-row { display:grid; grid-template-columns:145px 1fr; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); }
+    .skill-row b { color:var(--olive); font:11px var(--mono); text-transform:uppercase; }
+    .skill-row span { color:var(--soft-ink); font-size:16px; }
+    .community { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+    .community-card { min-height:190px; padding:23px; border:1px solid var(--line); border-radius:var(--radius); background:var(--white); transition:transform .28s,box-shadow .28s; }
+    .community-card:hover { transform:translateY(-4px) rotate(-.5deg); box-shadow:0 13px 28px rgba(55,58,45,.08); }
+    .community-card:nth-child(2) { background:var(--pink); }
+    .community-icon { display:grid; place-items:center; width:37px; height:37px; margin-bottom:20px; border-radius:50%; background:var(--blue); color:#4f716b; font-size:18px; }
+    .community-card:nth-child(2) .community-icon { background:var(--pink); color:#8a5e50; }
+    .community-card h3 { margin:0 0 6px; font:22px var(--serif); }
+    .community-card p { margin:0; color:var(--muted); font-size:14px; }
+    .contact { padding:88px 0 90px; border-top:1px solid var(--line); }
+    .contact-box { position:relative; display:flex; align-items:center; justify-content:space-between; gap:25px; padding:clamp(25px,5vw,48px); overflow:hidden; border-radius:26px; background:var(--olive-light); }
+    .contact-box::after { content:"✿"; position:absolute; top:-29px; right:31%; color:rgba(105,121,72,.14); font-size:110px; transform:rotate(18deg); }
+    .contact-box h2 { max-width:590px; }
+    .contact-box p { max-width:430px; margin:13px 0 0; color:var(--soft-ink); font-size:16px; }
+    .contact-actions { position:relative; z-index:1; display:flex; flex-direction:column; gap:9px; flex:none; }
+    footer { padding:21px 0 28px; color:var(--muted); font-size:11px; }
+    .footer-row { display:flex; justify-content:space-between; gap:16px; }
+    .footer-links { display:flex; gap:15px; }
+    .footer-links a:hover { color:var(--olive); }
+    dialog { width:min(690px,calc(100% - 28px)); max-height:min(86vh,800px); padding:0; overflow:auto; border:1px solid var(--line); border-radius:23px; background:var(--paper); color:var(--ink); box-shadow:0 25px 80px rgba(36,39,31,.25); }
+    dialog::backdrop { background:rgba(33,38,32,.42); backdrop-filter:blur(3px); }
+    .dialog-inner { padding:24px; }
+    .dialog-top { display:flex; justify-content:space-between; align-items:center; }
+    .dialog-close { width:37px; height:37px; border:1px solid var(--line); border-radius:50%; background:var(--white); color:var(--ink); cursor:pointer; font-size:20px; }
+    .dialog-inner h2 { margin:16px 0 7px; font:32px/1.1 var(--serif); }
+    .dialog-inner p { color:var(--muted); font-size:14px; }
+    .dialog-media { margin:15px 0; overflow:hidden; border-radius:14px; background:var(--white); }
+    .dialog-media img,.dialog-media video { width:100%; max-height:370px; object-fit:contain; background:var(--paper); }
+    .dialog-inner h3 { margin:20px 0 7px; color:var(--olive); font:10px var(--mono); letter-spacing:.09em; text-transform:uppercase; }
+    .dialog-inner ul { padding-left:19px; color:var(--soft-ink); font-size:13px; }
+    .dialog-inner li { padding:3px 0; }
+    .dialog-tags { display:flex; flex-wrap:wrap; gap:6px; }
+    @media(max-width:800px) { .hero { gap:20px; }.about-grid,.skills-wrap { gap:32px; }.journey-grid { gap:28px; }.award-photo img { height:380px; } }
+    @media(max-width:620px) {
+      .shell { width:min(100% - 34px,520px); }
+      .nav { min-height:64px; }.nav-links { display:none; }
+      .nav-cta { min-height:37px; padding:0 12px; font-size:12px; }
+      html { scroll-padding-top:70px; }
+      .hero { min-height:0; grid-template-columns:1fr; gap:14px; padding:67px 0 51px; }
+      h1 { font-size:clamp(54px,15vw,75px); }
+      .hero-lede { font-size:16px; }.hero-art { min-height:405px; margin-top:4px; }
+      .lanyard-rig { height:395px; transform:scale(.92); transform-origin:top center; }.lanyard-hint { bottom:-24px; }
+      .section { padding:73px 0; }.section-head { align-items:start; flex-direction:column; gap:13px; margin-bottom:25px; }.section-intro { font-size:16px; }
+      .about-grid,.journey-grid,.skills-wrap,.award-layout,.motion-card { grid-template-columns:1fr; }
+      .about-grid { gap:24px; }.project-grid { grid-template-columns:1fr; }
+      .work-tools { align-items:flex-start; flex-direction:column; }.filter-group { width:100%; overflow-x:auto; flex-wrap:nowrap; padding-bottom:5px; }.filter { flex:none; }.search { width:100%; }
+      .project-image { height:215px; }.project-body p { min-height:0; }
+      .award-photo img { height:390px; }.award-copy { padding:0 2px; }.motion-card { gap:15px; }.motion-copy { padding:0 4px 7px; }
+      .community { grid-template-columns:1fr; }.community-card { min-height:0; }
+      .skill-row { grid-template-columns:112px 1fr; gap:8px; }.skill-row span { font-size:14px; }
+      .contact-box { align-items:start; flex-direction:column; }.contact-actions { width:100%; }.contact-actions .button { width:100%; }
+      .footer-row { flex-direction:column; }.footer-links { flex-wrap:wrap; }footer { padding-bottom:79px; }
+    }
+    .playground-intro { max-width:700px; color:var(--soft-ink); }
+    .dartpad-shell { overflow:hidden; border:1px solid #e4d5cf; border-radius:24px; background:linear-gradient(145deg,#fffefa 0%,#f7f1ee 55%,#f6f3e7 100%); box-shadow:0 20px 55px rgba(102,84,73,.1); }
+    .playground-bar { min-height:48px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 16px; border-bottom:1px solid var(--line); color:var(--muted); font:10px var(--mono); letter-spacing:.07em; text-transform:uppercase; }
+    .live-indicator { display:inline-flex; align-items:center; gap:7px; }
+    .live-indicator::before { content:""; width:7px; height:7px; border-radius:50%; background:#8a9a5e; box-shadow:0 0 0 3px rgba(138,154,94,.14); }
+    .playground-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 16px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+    .playground-footer a { color:var(--deep-olive); text-decoration:underline; text-underline-offset:3px; }
+    .dartpad-frame { display:block; width:100%; height:min(760px,82vh); min-height:600px; border:0; background:var(--white); }
+    .dartpad-shell .playground-bar { background:linear-gradient(90deg,#fffefa,#fbf4ef 48%,#f8f5e9); }
+    .dartpad-shell .playground-footer { background:#fffefa; }
+    html.motion-ready [data-motion] { opacity:0; transform:translateY(18px) scale(.99); transition:opacity .68s ease,transform .72s cubic-bezier(.2,.75,.22,1); transition-delay:var(--motion-delay,0ms); }
+    html.motion-ready [data-motion].motion-in { opacity:1; transform:translateY(0) scale(1); }
+    html.motion-ready .project-card[data-motion]:hover { transform:translateY(-4px) scale(1); }
+    .button,.nav-cta,.theme-toggle,.dialog-close,.playground-footer a { transition:transform .24s cubic-bezier(.2,.8,.2,1),box-shadow .24s,border-color .24s,background-color .24s,color .24s; }
+    .button:hover,.nav-cta:hover,.theme-toggle:hover,.dialog-close:hover { transform:translateY(-2px) rotate(-.5deg); }
+    .button:active,.nav-cta:active,.theme-toggle:active,.dialog-close:active { transform:translateY(1px) scale(.98); }
+    .award-photo { transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s; }
+    .award-photo:hover { transform:rotate(0) translateY(-4px); box-shadow:0 20px 40px rgba(50,52,44,.12); }
+    .timeline-item::before { transition:transform .25s,background .25s; }
+    .timeline-item:hover::before { transform:scale(1.45); background:var(--olive-light); }
+    .skill-row { transition:padding-left .25s,color .25s; }
+    .skill-row:hover { padding-left:7px; }
+    .socials a,.footer-links a { transition:color .2s,transform .2s; }
+    .socials a:hover,.footer-links a:hover { transform:translateY(-2px); }
+    .id-card-image { transition:filter .35s; }
+    .lanyard-badge:hover .id-card-image { filter:saturate(1.08); }
+    .project-card:active { transform:translateY(-1px) scale(.99); }
+    .search { transition:border-color .2s,box-shadow .2s,background-color .2s; }
+    .search:focus { border-color:var(--olive); outline:0; box-shadow:0 0 0 4px color-mix(in srgb,var(--olive) 16%,transparent); }
+    .nav-links a { position:relative; transition:color .2s,transform .2s; }
+    .nav-links a:hover { transform:translateY(-2px); }
+    .nav-links a::after { content:""; position:absolute; right:0; bottom:-5px; left:0; height:1px; background:var(--olive); transform:scaleX(0); transform-origin:left; transition:transform .25s; }
+    .nav-links a:hover::after,.nav-links a.active::after { transform:scaleX(1); }
+    dialog[open] { animation:dialog-pop .3s cubic-bezier(.2,.8,.2,1) both; }
+    @keyframes dialog-pop { from { opacity:0; transform:translateY(12px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+    .reveal { opacity:0; transform:translateY(18px); transition:opacity .55s ease,transform .55s cubic-bezier(.2,.7,.25,1); }
+    .reveal.is-visible { opacity:1; transform:translateY(0); }
+    .project-card.reveal:nth-child(2) { transition-delay:.08s; }
+    .project-card.reveal:nth-child(3) { transition-delay:.16s; }
+    .project-card.reveal:nth-child(4) { transition-delay:.24s; }
+    html[data-theme="dark"] .hero-art::before { border-color:#4b5541; }
+    html[data-theme="dark"] .hero-art::after { border-color:#5b443b; }
+    html[data-theme="dark"] .timeline { border-left-color:#687752; }
+    html[data-theme="dark"] .timeline-item::before { background:var(--paper); }
+    html[data-theme="dark"] .community-icon,html[data-theme="dark"] .community-card:nth-child(2) .community-icon { color:var(--deep-olive); }
+    html[data-theme="dark"] .contact-box::after { color:rgba(190,205,151,.1); }
+    html[data-theme="dark"] .dialog-media { background:var(--paper); }
+    @media(max-width:800px) { .dartpad-frame { height:680px; min-height:560px; } }
+    @media(max-width:620px) { .theme-toggle { width:37px; min-height:37px; padding:0; font-size:15px; }.theme-label { display:none; }.nav-actions { gap:6px; }.playground-footer { align-items:flex-start; flex-direction:column; gap:5px; }.dartpad-frame { height:620px; min-height:520px; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } html.motion-ready [data-motion] { opacity:1; transform:none; } }
+  </style>
+  <script>try{if(localStorage.getItem('athirah-theme')==='dark')document.documentElement.dataset.theme='dark';}catch{}</script>
+</head>
+<body>
+  <header class="topbar"><nav class="nav shell" aria-label="Main navigation">
+    <a class="brand" href="#home"><span class="brand-mark">A</span><span>Athirah Syaziyah</span></a>
+    <div class="nav-links"><a href="#about">About</a><a href="#work">Work</a><a href="#playground">Play</a><a href="#journey">Journey</a><a href="#contact">Contact</a></div>
+    <div class="nav-actions"><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark</span></button><a class="nav-cta" href="#contact">Say hello <span class="arrow" aria-hidden="true">↗</span></a></div>
+  </nav></header>
+  <main>
+    <section class="hero shell" id="home" aria-labelledby="hero-title">
+      <div><span class="eyebrow">Mobile computing · Malaysia</span><h1 id="hero-title">Small details,<br><em>thoughtful apps.</em></h1>
+        <p class="hero-lede">Hello, I’m <strong>Athirah</strong> — a Computer Science student who likes making useful things feel clear, friendly, and a little bit delightful.</p>
+        <div class="hero-actions"><a class="button primary" href="#work">Take a look <span class="arrow" aria-hidden="true">↘</span></a><a class="button soft" href="mailto:athirahsyaziyah@gmail.com">Get in touch</a></div>
+        <div class="socials"><a href="https://www.linkedin.com/in/athirahsyaziyah" target="_blank" rel="noreferrer">LinkedIn ↗</a><a href="https://github.com/szlyrfae" target="_blank" rel="noreferrer">GitHub ↗</a><span>Open to internship opportunities</span></div>
+      </div>
+      <div class="hero-art" aria-label="Interactive photo ID badge on a lanyard"><span class="spark a" aria-hidden="true">✳</span><span class="spark b" aria-hidden="true">✦</span><div class="lanyard-rig">
+        <svg class="lanyard-cord" viewBox="0 0 320 420" preserveAspectRatio="none" aria-hidden="true"><path class="strap-left" id="cord-left" d="M18 -140 C24 -55 110 30 151 102"></path><path class="stitch" id="cord-left-stitch" d="M18 -140 C24 -55 110 30 151 102"></path><path class="strap-right" id="cord-right" d="M302 -140 C296 -55 210 30 169 102"></path><path class="stitch" id="cord-right-stitch" d="M302 -140 C296 -55 210 30 169 102"></path></svg><span class="lanyard-hook" aria-hidden="true"></span>
+        <div class="lanyard-badge" id="lanyard-badge" tabindex="0" role="group" aria-label="Athirah Syaziyah's photo ID card on a lanyard. Drag the card to pull it; it returns when released. Press Space or the down arrow to tug it with the keyboard."><img class="id-card-image" src="assets/athirah-id-card.png" alt="Athirah Syaziyah's monochrome Mobile App Developer ID card with a red diagonal footer" draggable="false"></div>
+        <p class="lanyard-hint"><span>↕</span> <strong>DRAG ME</strong> · pull anywhere, release to return</p></div></div>
+    </section>
+
+    <section class="section" id="about"><div class="shell">
+      <div class="section-head"><div><span class="eyebrow">A little introduction</span><h2>Curious by nature.<br><em>Careful by design.</em></h2></div><p class="section-intro">I enjoy the whole process: understanding a need, shaping an interface, connecting the pieces, and making sure it works well for real people.</p></div>
+      <div class="about-grid"><aside class="aside-note"><blockquote>“Useful can be <em>lovely, too.</em>”</blockquote><p>My favourite details are the quiet ones: a clear next step, a helpful empty state, a screen that feels easy to use.</p></aside>
+        <div class="about-copy"><p>I’m studying for a Bachelor of Computer Science (Mobile Computing) with Honours at Universiti Malaysia Terengganu, with an expected graduation in 2028. Earlier, I completed a Diploma in Computer Science at MARA Professional College.</p><p>At Aurora Cloud Works, I worked on HRMS features across web and mobile: Flutter, REST APIs, MSSQL, testing, debugging, and code reviews. I also build Flutter apps for freelance clients.</p><div class="facts"><div class="fact"><b>3.44</b><span>Current CGPA</span></div><div class="fact"><b>2028</b><span>Expected graduation</span></div><div class="fact"><b>3+</b><span>Years building</span></div></div></div>
+      </div>
+    </div></section>
+
+    <section class="section" id="work"><div class="shell">
+      <div class="section-head"><div><span class="eyebrow">Selected work</span><h2>Projects with a<br><em>purpose and a pulse.</em></h2></div><p class="section-intro">A mix of mobile, web, and game projects. Tap a card for the details; the ManaBus demo includes a short video.</p></div>
+      <div class="work-tools"><div class="filter-group" role="group" aria-label="Filter projects"><button class="filter" type="button" data-filter="all" aria-pressed="true">Everything</button><button class="filter" type="button" data-filter="mobile" aria-pressed="false">Mobile</button><button class="filter" type="button" data-filter="web" aria-pressed="false">Web</button><button class="filter" type="button" data-filter="game" aria-pressed="false">Games</button><span class="interaction-hint filter-hint">TRY A FILTER ↓</span></div><input class="search" id="project-search" type="search" placeholder="Try a keyword ↵" aria-label="Search projects"></div>
+      <div class="project-grid" id="project-grid">
+        <button class="project-card" type="button" data-category="mobile" data-search="aaima islamic fundamentals educational mobile flutter dart sqlite aqidah rukun iman" data-project="aaima"><span class="project-image"><img src="assets/aaima.jpg" alt="AAIMA app screenshot with its learning categories" loading="lazy"><span class="image-label">A personal project</span></span><span class="project-body"><span class="project-meta"><span>2025 — ongoing</span><span>Mobile</span></span><h3>AAIMA</h3><p>An educational app for exploring Islamic fundamentals, with offline access and a gentle learning flow.</p><span class="tags"><span class="tag">Flutter</span><span class="tag">Dart</span><span class="tag">SQLite</span></span><span class="card-link">CLICK FOR DETAILS <span aria-hidden="true">↗</span></span></span></button>
+        <button class="project-card" type="button" data-category="web" data-search="manabus live bus tracking progressive web application routes stops kuala terengganu javascript node express leaflet gtfs" data-project="manabus"><span class="project-image"><img src="assets/manabus.jpg" alt="ManaBus route search screen on a mobile device" loading="lazy"><span class="image-label">A PWA for getting around</span></span><span class="project-body"><span class="project-meta"><span>2026 · team of 5</span><span>Web</span></span><h3>ManaBus</h3><p>A mobile-friendly way to discover Kuala Terengganu bus routes and nearby stops.</p><span class="tags"><span class="tag">JavaScript</span><span class="tag">Node.js</span><span class="tag">Leaflet.js</span></span><span class="card-link">CLICK FOR DETAILS <span aria-hidden="true">↗</span></span></span></button>
+        <button class="project-card" type="button" data-category="game" data-search="nenek kebayan siapa pengkhianat multiplayer game folklore godot 4 hidden role" data-project="nenek"><span class="project-image"><img src="assets/nenek.jpg" alt="Nenek Kebayan game screenshot showing its folklore inspired village and how-to-play panel" loading="lazy"><span class="image-label">Inspired by folklore</span></span><span class="project-body"><span class="project-meta"><span>2026 · team of 3</span><span>Game</span></span><h3>Nenek Kebayan: Siapa Pengkhianat?</h3><p>An online multiplayer game with character selection, lobbies, and hidden-role play.</p><span class="tags"><span class="tag">Godot 4</span><span class="tag">Game UI</span><span class="tag">Multiplayer</span></span><span class="card-link">CLICK FOR DETAILS <span aria-hidden="true">↗</span></span></span></button>
+        <button class="project-card" type="button" data-category="web" data-search="srms hall reservation management system java jsp servlet netbeans frontend academic" data-project="srms"><span class="project-image" style="display:grid;place-items:center;background:#ececde"><span style="font:italic 64px var(--serif);color:#87916f;transform:rotate(-6deg)">SRMS<span aria-hidden="true">✳</span></span><span class="image-label">Making room for good plans</span></span><span class="project-body"><span class="project-meta"><span>2026 · team of 3</span><span>Web</span></span><h3>Hall Reservations</h3><p>A web-based hall reservation management system; I focused on its frontend experience.</p><span class="tags"><span class="tag">Java</span><span class="tag">JSP</span><span class="tag">Servlet</span></span><span class="card-link">CLICK FOR DETAILS <span aria-hidden="true">↗</span></span></span></button>
+      </div><div class="empty" id="empty-state">No matching project yet — try another word or filter.</div>
+    </div></section>
+
+    <section class="section" id="playground" aria-labelledby="playground-title"><div class="shell">
+      <div class="section-head"><div><span class="eyebrow">A tiny experiment</span><h2 id="playground-title">A little code,<br><em>in motion.</em></h2></div><p class="section-intro playground-intro">Try real Dart in the embedded DartPad: edit the example, run it, and explore the language right here in the page.</p></div>
+      <div class="dartpad-shell"><div class="playground-bar"><span>main.dart · little joy garden</span><span class="live-indicator"><span class="interaction-hint">TRY ME ↓</span> · Interactive DartPad</span></div><iframe class="dartpad-frame" id="playground-preview" title="Interactive DartPad code editor" src="https://dartpad.dev/?id=bd0e6a59fa5542102a451791fb8afb26&amp;theme=light&amp;run=true&amp;embed=true" loading="lazy" referrerpolicy="no-referrer" allow="clipboard-read; clipboard-write"></iframe><div class="playground-footer"><span>Tap “Grow a little joy” to make the flower bloom. Your edits run in DartPad.</span><a href="https://dartpad.dev/?id=bd0e6a59fa5542102a451791fb8afb26&amp;theme=light&amp;run=true" target="_blank" rel="noopener noreferrer">Open DartPad in a new tab ↗</a></div></div>
+    </div></section>
+
+    <section class="section" id="recognition"><div class="shell">
+      <div class="section-head"><div><span class="eyebrow">A proud little moment</span><h2>Bronze at MPI.<br><em>Made as a team.</em></h2></div><p class="section-intro">A real-world idea, a lot of teamwork, and a moment I’m happy to remember.</p></div>
+      <div class="award-layout"><figure class="award-photo"><img src="assets/mpi.jpg" alt="MPI 2026 Bronze Medal certificate and medal for the CampusBuddy+ team" loading="lazy"><figcaption>The CampusBuddy+ team’s Bronze Medal at Minggu Penyelidikan dan Inovasi, 2026.</figcaption></figure><div class="award-copy"><span class="award-label">MPI 2026 · Bronze Medal</span><h3>CampusBuddy+</h3><p>An integrated, AI-driven student platform pitched at Minggu Penyelidikan dan Inovasi. I presented the concept and technical direction with my teammates.</p><p class="small-note">The certificate recognises the team. I’m proud of the shared work behind it.</p></div></div>
+      <div class="motion-card"><video controls preload="metadata" poster="assets/manabus.jpg" aria-label="Short ManaBus mobile app demonstration"><source src="assets/manabus-demo.mp4" type="video/mp4">Your browser does not support embedded video. <a href="assets/manabus-demo.mp4">Open the ManaBus demo</a>.</video><div class="motion-copy"><span class="eyebrow">A moment in motion</span><h3>ManaBus, on the move</h3><p>A short clip from the project folder, showing the route discovery experience on mobile.</p><p class="caption">Press play ▶ when you’re ready; the video won’t autoplay.</p></div></div>
+    </div></section>
+
+    <section class="section" id="journey"><div class="shell">
+      <div class="section-head"><div><span class="eyebrow">The path so far</span><h2>Learning by<br><em>making things together.</em></h2></div><p class="section-intro">Professional experience, client projects, and a mobile computing degree all feed into how I work.</p></div>
+      <div class="journey-grid"><div><div class="subhead"><h3>Experience</h3><span>Work &amp; practice</span></div><div class="timeline">
+        <article class="timeline-item"><span class="timeline-date">July 2024 — Present</span><h4>Freelance Mobile App Developer</h4><div class="timeline-place">Self-employed · Remote</div><p>Work with clients from planning and requirements through development, testing, and delivery.</p></article>
+        <article class="timeline-item"><span class="timeline-date">July 2023 — September 2024</span><h4>Junior Software Programmer</h4><div class="timeline-place">Aurora Cloud Works · Johor</div><p>Built HRMS features for web and mobile using Flutter, REST APIs, and MSSQL; worked across testing and code review.</p></article>
+        <article class="timeline-item"><span class="timeline-date">April 2023 — June 2023</span><h4>Software Programmer Intern</h4><div class="timeline-place">Aurora Cloud Works · Johor</div><p>Contributed to HRMS development, API work, documentation, and software delivery.</p></article>
+      </div></div><div><div class="subhead"><h3>Education</h3><span>Study &amp; exchange</span></div><div class="timeline">
+        <article class="timeline-item"><span class="timeline-date">2024 — 2028 · in progress</span><h4>BSc Computer Science (Mobile Computing) with Honours</h4><div class="timeline-place">Universiti Malaysia Terengganu</div><p>CGPA 3.44. Focus areas include mobile application development and front-end programming.</p></article>
+        <article class="timeline-item"><span class="timeline-date">2021 — 2023</span><h4>Diploma in Computer Science</h4><div class="timeline-place">MARA Professional College, Beranang</div></article>
+        <article class="timeline-item"><span class="timeline-date">September 2025</span><h4>International Student Mobility Programme</h4><div class="timeline-place">UDINUS · Semarang, Indonesia</div><p>Two-week programme with academic workshops, group presentations, and cultural exchange.</p></article>
+      </div></div></div>
+    </div></section>
+
+    <section class="section" id="skills"><div class="shell">
+      <div class="section-head"><div><span class="eyebrow">My toolkit</span><h2>Mobile at heart,<br><em>curious about the rest.</em></h2></div><p class="section-intro">I like moving between the parts of a product: interface, app logic, data, and the conversations that connect them.</p></div>
+      <div class="skills-wrap"><p class="skills-intro">A practical toolkit, shaped by work, coursework, and projects. Always adding a few new things to the mix.</p><div class="skill-list">
+        <div class="skill-row"><b>Mobile</b><span>Flutter · Dart · Android · Kotlin</span></div><div class="skill-row"><b>Languages</b><span>Java · C# · Visual Basic · JavaScript · C++</span></div><div class="skill-row"><b>Backend</b><span>REST APIs · .NET Framework · Node.js · Express</span></div><div class="skill-row"><b>Data</b><span>SQLite · MSSQL · MySQL · Stored procedures</span></div><div class="skill-row"><b>Tools</b><span>Android Studio · Visual Studio · Postman · GitHub · NetBeans</span></div><div class="skill-row"><b>Teamwork</b><span>Testing · Debugging · Code review · Communication</span></div>
+      </div></div>
+    </div></section>
+
+    <section class="section" id="community"><div class="shell">
+      <div class="section-head"><div><span class="eyebrow">Outside the editor</span><h2>Good things happen<br><em>in a team.</em></h2></div><p class="section-intro">I’ve also enjoyed making, sharing, and learning with people across campus.</p></div>
+      <div class="community"><article class="community-card"><span class="community-icon" aria-hidden="true">✿</span><h3>COMTECH, FSKM</h3><p>Deputy Corporate Communication Officer II · 2025–2026<br>Designed event media and supported the club’s digital communications.</p></article><article class="community-card"><span class="community-icon" aria-hidden="true">⌁</span><h3>UDINUS mobility programme</h3><p>Workshops, group presentations, and cultural exchange in Semarang, Indonesia · 2025.</p></article></div>
+    </div></section>
+
+    <section class="contact" id="contact"><div class="shell"><div class="contact-box"><div><span class="eyebrow">What’s next?</span><h2>Let’s make something <em>meaningful.</em></h2><p>I’m looking for a Mobile Application Developer Internship where I can contribute, learn from a team, and grow through real product work.</p></div><div class="contact-actions"><a class="button primary" href="mailto:athirahsyaziyah@gmail.com">Email me <span class="arrow" aria-hidden="true">↗</span></a><a class="button soft" href="https://www.linkedin.com/in/athirahsyaziyah" target="_blank" rel="noreferrer">Find me on LinkedIn ↗</a></div></div></div></section>
+  </main>
+  <footer><div class="shell footer-row"><span>© <span id="year"></span> Athirah Syaziyah 'Azman · Made with care, in Malaysia</span><div class="footer-links"><a href="https://www.linkedin.com/in/athirahsyaziyah" target="_blank" rel="noreferrer">LinkedIn</a><a href="https://github.com/szlyrfae" target="_blank" rel="noreferrer">GitHub</a><a href="#home">Back to the top</a></div></div></footer>
+
+  <dialog id="project-dialog" aria-labelledby="dialog-title"><div class="dialog-inner"><div class="dialog-top"><span class="eyebrow" id="dialog-kicker">Project notes</span><button class="dialog-close" type="button" aria-label="Close project details">×</button></div><h2 id="dialog-title"></h2><p id="dialog-summary"></p><div class="dialog-media" id="dialog-media"></div><h3>What I worked on</h3><ul id="dialog-points"></ul><div class="dialog-tags" id="dialog-tags"></div></div></dialog>
+  <script>
+    const badge=document.getElementById('lanyard-badge'), cord=document.querySelector('.lanyard-cord'), art=document.querySelector('.hero-art'), cordPaths={left:[document.getElementById('cord-left'),document.getElementById('cord-left-stitch')],right:[document.getElementById('cord-right'),document.getElementById('cord-right-stitch')]};
+    let drag=null, tugTimer, roaming=false, tether=null;
+    function setLanyard(pull=0,sway=0){badge.style.setProperty('--pull-y',`${pull}px`);badge.style.setProperty('--sway',`${sway}deg`);let left,right;if(roaming&&tether){const box=badge.getBoundingClientRect(),y=box.top+7,lx=box.left+box.width*.45,rx=box.left+box.width*.55;left=`M${tether.leftX} ${tether.anchorY} C${tether.leftX} ${tether.anchorY+90} ${lx-46} ${y-82} ${lx} ${y}`;right=`M${tether.rightX} ${tether.anchorY} C${tether.rightX} ${tether.anchorY+90} ${rx+46} ${y-82} ${rx} ${y}`;}else{const y=102+pull,lx=151+sway*.35,rx=169+sway*.35;left=`M18 -140 C24 -55 110 ${30+pull*.7} ${lx} ${y}`;right=`M302 -140 C296 -55 210 ${30+pull*.7} ${rx} ${y}`;}cordPaths.left.forEach(path=>path.setAttribute('d',left));cordPaths.right.forEach(path=>path.setAttribute('d',right));}
+    function quickTug(){clearTimeout(tugTimer);badge.classList.remove('is-swinging');badge.classList.add('is-dragging');setLanyard(64,7);tugTimer=setTimeout(()=>{badge.classList.remove('is-dragging');setLanyard();badge.classList.add('is-swinging');setTimeout(()=>badge.classList.remove('is-swinging'),680);},360);}
+    function cordAnchor(x,y){const p=cord.createSVGPoint();p.x=x;p.y=y;return p.matrixTransform(cord.getScreenCTM());}
+    function startRoaming(box){if(roaming)return;const leftAnchor=cordAnchor(18,-140),rightAnchor=cordAnchor(302,-140);tether={leftX:leftAnchor.x,rightX:rightAnchor.x,anchorY:leftAnchor.y};roaming=true;art.classList.add('is-roaming');badge.style.left=`${box.left}px`;badge.style.top=`${box.top}px`;badge.classList.add('is-roaming');cord.classList.add('is-roaming');cord.setAttribute('viewBox',`0 0 ${window.innerWidth} ${window.innerHeight}`);}
+    badge.addEventListener('pointerdown',e=>{if(e.target.closest('button,a'))return;e.preventDefault();clearTimeout(tugTimer);badge.classList.remove('is-swinging');const box=badge.getBoundingClientRect();drag={id:e.pointerId,offsetX:e.clientX-box.left,offsetY:e.clientY-box.top,lastX:e.clientX,startX:e.clientX,startY:e.clientY,box,moved:false};badge.classList.add('is-dragging');badge.setPointerCapture(e.pointerId);});
+    window.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const distance=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY);if(!drag.moved&&distance<5)return;e.preventDefault();if(!drag.moved){drag.moved=true;startRoaming(drag.box);}const box=badge.getBoundingClientRect(),left=Math.max(6,Math.min(window.innerWidth-box.width-6,e.clientX-drag.offsetX)),top=Math.max(6,Math.min(window.innerHeight-box.height-6,e.clientY-drag.offsetY)),sway=Math.max(-18,Math.min(18,(e.clientX-drag.lastX)*.7));drag.lastX=e.clientX;badge.style.left=`${left}px`;badge.style.top=`${top}px`;setLanyard(0,sway);},{passive:false,capture:true});
+    function releaseBadge(e){if(!drag||e.pointerId!==drag.id)return;if(!drag.moved){drag=null;badge.classList.remove('is-dragging');setLanyard();return;}dockBadge();}
+    function dockBadge(){if(!roaming)return;drag=null;roaming=false;tether=null;badge.classList.remove('is-dragging','is-roaming');art.classList.remove('is-roaming');cord.classList.remove('is-roaming');cord.setAttribute('viewBox','0 0 320 420');badge.style.removeProperty('left');badge.style.removeProperty('top');setLanyard();badge.classList.add('is-swinging');setTimeout(()=>badge.classList.remove('is-swinging'),680);}
+    badge.addEventListener('dblclick',e=>{if(!e.target.closest('button,a'))dockBadge();});
+    window.addEventListener('pointerup',releaseBadge,true);window.addEventListener('pointercancel',releaseBadge,true);badge.addEventListener('lostpointercapture',releaseBadge);
+    badge.addEventListener('keydown',e=>{if(e.target.closest('button,a'))return;if(e.key==='Home'){e.preventDefault();dockBadge();}else if(e.key==='ArrowDown'){e.preventDefault();quickTug();}else if(e.key==='ArrowUp'||e.key==='Escape'){e.preventDefault();clearTimeout(tugTimer);badge.classList.remove('is-dragging');setLanyard();}else if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!e.repeat)quickTug();}});
+    const projects={
+      aaima:{kicker:'Personal project · 2025–ongoing',title:'AAIMA — Islamic Fundamentals',summary:'An educational mobile application in development, focused on Islamic fundamentals including Aqidah and Rukun Iman.',image:'assets/aaima.jpg',alt:'AAIMA learning app menu',points:['Building with Flutter and Dart, with SQLite for local and offline access.','Designing reusable UI components and intuitive navigation with Material Design.','Integrating multimedia resources and PDF document handling.'],tags:['Flutter','Dart','SQLite']},
+      manabus:{kicker:'Academic project · team of 5',title:'ManaBus — Live Bus Tracking PWA',summary:'A mobile-oriented PWA for discovering bus routes and nearby stops around Kuala Terengganu.',video:'assets/manabus-demo.mp4',poster:'assets/manabus.jpg',points:['Integrated GTFS transit data and REST APIs for route information.','Implemented interactive maps, location-based bus stop discovery, and route searching.','Added favourite routes, weather information, and offline fallback support.'],tags:['JavaScript','Node.js','Express','Leaflet.js','REST APIs']},
+      nenek:{kicker:'Team project · team of 3',title:'Nenek Kebayan: Siapa Pengkhianat?',summary:'An online multiplayer mobile game inspired by Malaysian folklore and entered in the UMPSA × HUAWEI GameCenter Mobile Game Competition (UXHMAC 2026).',image:'assets/nenek.jpg',alt:'Nenek Kebayan gameplay instructions',points:['Contributed to the interface and gameplay features.','Worked on character selection, multiplayer lobbies, and hidden-role mechanics.','Built with Godot 4.'],tags:['Godot 4','Game UI','Multiplayer']},
+      srms:{kicker:'Academic project · team of 3',title:'SRMS — Hall Reservation Management',summary:'A web-based hall reservation management system built for an academic project.',points:['Focused on frontend development and interface design.','Aligned frontend components with system requirements and functionality.'],tags:['Java','JSP','Servlet','NetBeans']}
+    };
+    const cards=[...document.querySelectorAll('.project-card')], filters=[...document.querySelectorAll('.filter')], search=document.getElementById('project-search'); let active='all';
+    function updateProjects(){const q=search.value.trim().toLowerCase();let count=0;cards.forEach(c=>{const show=(active==='all'||c.dataset.category===active)&&(!q||c.dataset.search.includes(q));c.hidden=!show;if(show)count++;});document.getElementById('empty-state').classList.toggle('show',count===0);}
+    filters.forEach(b=>b.addEventListener('click',()=>{active=b.dataset.filter;filters.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));updateProjects();}));search.addEventListener('input',updateProjects);
+    const dialog=document.getElementById('project-dialog');cards.forEach(card=>card.addEventListener('click',()=>{const p=projects[card.dataset.project];document.getElementById('dialog-kicker').textContent=p.kicker;document.getElementById('dialog-title').textContent=p.title;document.getElementById('dialog-summary').textContent=p.summary;const media=document.getElementById('dialog-media');media.replaceChildren();if(p.video){const v=document.createElement('video');v.controls=true;v.preload='metadata';v.poster=p.poster;const s=document.createElement('source');s.src=p.video;s.type='video/mp4';v.append(s);media.append(v);}else if(p.image){const i=document.createElement('img');i.src=p.image;i.alt=p.alt;media.append(i);}else{media.hidden=true;}media.hidden=!p.video&&!p.image;const ul=document.getElementById('dialog-points');ul.replaceChildren(...p.points.map(t=>{const li=document.createElement('li');li.textContent=t;return li;}));const tags=document.getElementById('dialog-tags');tags.replaceChildren(...p.tags.map(t=>{const s=document.createElement('span');s.className='tag';s.textContent=t;return s;}));dialog.showModal();}));
+    document.querySelector('.dialog-close').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});document.getElementById('year').textContent=new Date().getFullYear();
+    const themeButton=document.getElementById('theme-toggle'),themeIcon=themeButton.querySelector('.theme-icon'),themeLabel=themeButton.querySelector('.theme-label');
+    function syncThemeControl(){const dark=document.documentElement.dataset.theme==='dark';themeButton.setAttribute('aria-pressed',String(dark));themeButton.setAttribute('aria-label',`Switch to ${dark?'light':'dark'} mode`);themeIcon.textContent=dark?'☀':'☾';themeLabel.textContent=dark?'Light':'Dark';}
+    syncThemeControl();themeButton.addEventListener('click',()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';try{localStorage.setItem('athirah-theme',dark?'dark':'light');}catch{}syncThemeControl();});
+    const motionTargets=[...document.querySelectorAll('.nav > *, .hero > div:first-child > *, .hero-art, .section-head > *, .about-grid > *, .work-tools, .project-card, .award-layout > *, .motion-card, .journey-grid > *, .skill-row, .community-card, .contact-box > *, footer .footer-row > *, .dartpad-shell')];
+    if('IntersectionObserver'in window&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('motion-ready');motionTargets.forEach((el,i)=>{el.dataset.motion='';el.style.setProperty('--motion-delay',`${(i%5)*65}ms`);});const motionObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('motion-in');motionObserver.unobserve(entry.target);}}),{threshold:.08,rootMargin:'0px 0px -5% 0px'});motionTargets.forEach(el=>motionObserver.observe(el));}
+    const nav=[...document.querySelectorAll('.nav-links a')], sections=nav.map(a=>document.querySelector(a.hash)).filter(Boolean);if('IntersectionObserver'in window){const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)nav.forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id));}),{rootMargin:'-30% 0px -60% 0px'});sections.forEach(s=>obs.observe(s));}
+  </script>
+</body>
+</html>
