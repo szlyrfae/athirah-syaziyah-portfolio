@@ -51,7 +51,7 @@
     .lanyard-rig { position:relative; width:320px; height:420px; max-width:100%; }
     .hero-art.is-roaming .lanyard-rig { transform:none!important; }
     .lanyard-cord { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
-    .lanyard-overlay { position:fixed; inset:0; z-index:1000; pointer-events:none; overflow:hidden; }
+    .lanyard-overlay { position:fixed; inset:0; z-index:39; pointer-events:none; overflow:hidden; }
     .lanyard-overlay .lanyard-cord { position:absolute; inset:0; z-index:0; width:100%; height:100%; }
     .lanyard-overlay .lanyard-badge.is-roaming { position:absolute; z-index:1; pointer-events:auto; }
     .lanyard-cord path { fill:none; stroke-width:13; stroke-linecap:round; }
@@ -334,7 +334,7 @@
   <dialog id="project-dialog" aria-labelledby="dialog-title"><div class="dialog-inner"><div class="dialog-top"><span class="eyebrow" id="dialog-kicker">Project notes</span><button class="dialog-close" type="button" aria-label="Close project details">×</button></div><h2 id="dialog-title"></h2><p id="dialog-summary"></p><div class="dialog-media" id="dialog-media"></div><h3>What I worked on</h3><ul id="dialog-points"></ul><div class="dialog-tags" id="dialog-tags"></div></div></dialog>
   <script>
     const badge=document.getElementById('lanyard-badge'), cord=document.querySelector('.lanyard-cord'), art=document.querySelector('.hero-art'), rig=badge.parentElement, cordPaths={left:[document.getElementById('cord-left'),document.getElementById('cord-left-stitch')],right:[document.getElementById('cord-right'),document.getElementById('cord-right-stitch')]};
-    let drag=null, tugTimer, roaming=false, tether=null, overlay=null, badgePlaceholder=null, cordPlaceholder=null;
+    let drag=null, tugTimer, roaming=false, tether=null, overlay=null, cordPlaceholder=null;
     function setLanyard(pull=0,sway=0){
       badge.style.setProperty('--pull-y',`${pull}px`);badge.style.setProperty('--sway',`${sway}deg`);
       let left,right;
@@ -355,16 +355,14 @@
       if(roaming)return;
       const r=rig.getBoundingClientRect(),sx=r.width/320,sy=r.height/420;
       tether={leftX:r.left+18*sx,rightX:r.left+302*sx,anchorY:Math.max(8,r.top-140*sy)};
-      badgePlaceholder=document.createComment('badge home');cordPlaceholder=document.createComment('lanyard home');
-      badge.before(badgePlaceholder);cord.before(cordPlaceholder);
-      overlay=document.createElement('div');overlay.className='lanyard-overlay';overlay.setAttribute('aria-hidden','true');document.body.append(overlay);overlay.append(cord,badge);
+      cordPlaceholder=document.createComment('lanyard home');cord.before(cordPlaceholder);
+      overlay=document.createElement('div');overlay.className='lanyard-overlay';overlay.setAttribute('aria-hidden','true');document.body.append(overlay);overlay.append(cord);
       roaming=true;art.classList.add('is-roaming');cord.setAttribute('viewBox',`0 0 ${window.innerWidth} ${window.innerHeight}`);
       badge.style.left=`${box.left}px`;badge.style.top=`${box.top}px`;badge.style.setProperty('--sway','0deg');badge.classList.add('is-roaming');
-    }
-    badge.addEventListener('pointerdown',e=>{if(e.target.closest('button,a'))return;e.preventDefault();clearTimeout(tugTimer);badge.classList.remove('is-swinging');const box=badge.getBoundingClientRect();drag={id:e.pointerId,offsetX:e.clientX-box.left,offsetY:e.clientY-box.top,lastX:e.clientX,startX:e.clientX,startY:e.clientY,box,moved:false};badge.classList.add('is-dragging');badge.setPointerCapture(e.pointerId);});
+    }    badge.addEventListener('pointerdown',e=>{if(e.target.closest('button,a'))return;e.preventDefault();clearTimeout(tugTimer);badge.classList.remove('is-swinging');const box=badge.getBoundingClientRect();drag={id:e.pointerId,offsetX:e.clientX-box.left,offsetY:e.clientY-box.top,lastX:e.clientX,startX:e.clientX,startY:e.clientY,box,moved:false};badge.classList.add('is-dragging');badge.setPointerCapture(e.pointerId);});
     window.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const distance=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY);if(!drag.moved&&distance<5)return;e.preventDefault();if(!drag.moved){drag.moved=true;startRoaming(drag.box);}const w=badge.offsetWidth,h=badge.offsetHeight,left=Math.max(6,Math.min(window.innerWidth-w-6,e.clientX-drag.offsetX)),top=Math.max(6,Math.min(window.innerHeight-h-6,e.clientY-drag.offsetY)),sway=Math.max(-18,Math.min(18,(e.clientX-drag.lastX)*.7));drag.lastX=e.clientX;badge.style.left=`${left}px`;badge.style.top=`${top}px`;setLanyard(0,sway);},{passive:false,capture:true});
     function releaseBadge(e){if(!drag||e.pointerId!==drag.id)return;if(!drag.moved){drag=null;badge.classList.remove('is-dragging');setLanyard();return;}dockBadge();}
-    function dockBadge(){if(!roaming)return;drag=null;roaming=false;tether=null;badge.classList.remove('is-dragging','is-roaming');art.classList.remove('is-roaming');badge.style.removeProperty('left');badge.style.removeProperty('top');badge.style.removeProperty('--sway');cord.setAttribute('viewBox','0 0 320 420');badgePlaceholder.replaceWith(badge);cordPlaceholder.replaceWith(cord);overlay.remove();overlay=null;badgePlaceholder=null;cordPlaceholder=null;setLanyard();badge.classList.add('is-swinging');setTimeout(()=>badge.classList.remove('is-swinging'),680);}
+    function dockBadge(){if(!roaming)return;drag=null;roaming=false;tether=null;badge.classList.remove('is-dragging','is-roaming');art.classList.remove('is-roaming');badge.style.removeProperty('left');badge.style.removeProperty('top');badge.style.removeProperty('--sway');cord.setAttribute('viewBox','0 0 320 420');cordPlaceholder.replaceWith(cord);overlay.remove();overlay=null;cordPlaceholder=null;setLanyard();badge.classList.add('is-swinging');setTimeout(()=>badge.classList.remove('is-swinging'),680);}
     badge.addEventListener('dblclick',e=>{if(!e.target.closest('button,a'))dockBadge();});
     window.addEventListener('pointerup',releaseBadge,true);window.addEventListener('pointercancel',releaseBadge,true);badge.addEventListener('lostpointercapture',releaseBadge);
     badge.addEventListener('keydown',e=>{if(e.target.closest('button,a'))return;if(e.key==='Home'){e.preventDefault();dockBadge();}else if(e.key==='ArrowDown'){e.preventDefault();quickTug();}else if(e.key==='ArrowUp'||e.key==='Escape'){e.preventDefault();clearTimeout(tugTimer);badge.classList.remove('is-dragging');setLanyard();}else if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!e.repeat)quickTug();}});    const projects={
