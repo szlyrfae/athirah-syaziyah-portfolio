@@ -51,7 +51,9 @@
     .lanyard-rig { position:relative; width:320px; height:420px; max-width:100%; }
     .hero-art.is-roaming .lanyard-rig { transform:none!important; }
     .lanyard-cord { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
-    .lanyard-cord.is-roaming { position:fixed; inset:0; z-index:50; width:100vw; height:100vh; }
+    .lanyard-overlay { position:fixed; inset:0; z-index:1000; pointer-events:none; overflow:hidden; }
+    .lanyard-overlay .lanyard-cord { position:absolute; inset:0; z-index:0; width:100%; height:100%; }
+    .lanyard-overlay .lanyard-badge.is-roaming { position:absolute; z-index:1; pointer-events:auto; }
     .lanyard-cord path { fill:none; stroke-width:13; stroke-linecap:round; }
     .lanyard-cord .strap-left { stroke:#394036; }
     .lanyard-cord .strap-right { stroke:#b8483d; }
@@ -331,20 +333,41 @@
 
   <dialog id="project-dialog" aria-labelledby="dialog-title"><div class="dialog-inner"><div class="dialog-top"><span class="eyebrow" id="dialog-kicker">Project notes</span><button class="dialog-close" type="button" aria-label="Close project details">×</button></div><h2 id="dialog-title"></h2><p id="dialog-summary"></p><div class="dialog-media" id="dialog-media"></div><h3>What I worked on</h3><ul id="dialog-points"></ul><div class="dialog-tags" id="dialog-tags"></div></div></dialog>
   <script>
-    const badge=document.getElementById('lanyard-badge'), cord=document.querySelector('.lanyard-cord'), art=document.querySelector('.hero-art'), cordPaths={left:[document.getElementById('cord-left'),document.getElementById('cord-left-stitch')],right:[document.getElementById('cord-right'),document.getElementById('cord-right-stitch')]};
-    let drag=null, tugTimer, roaming=false, tether=null;
-    function setLanyard(pull=0,sway=0){badge.style.setProperty('--pull-y',`${pull}px`);badge.style.setProperty('--sway',`${sway}deg`);let left,right;if(roaming&&tether){const box=badge.getBoundingClientRect(),y=box.top+7,lx=box.left+box.width*.45,rx=box.left+box.width*.55;left=`M${tether.leftX} ${tether.anchorY} C${tether.leftX} ${tether.anchorY+90} ${lx-46} ${y-82} ${lx} ${y}`;right=`M${tether.rightX} ${tether.anchorY} C${tether.rightX} ${tether.anchorY+90} ${rx+46} ${y-82} ${rx} ${y}`;}else{const y=102+pull,lx=151+sway*.35,rx=169+sway*.35;left=`M18 -140 C24 -55 110 ${30+pull*.7} ${lx} ${y}`;right=`M302 -140 C296 -55 210 ${30+pull*.7} ${rx} ${y}`;}cordPaths.left.forEach(path=>path.setAttribute('d',left));cordPaths.right.forEach(path=>path.setAttribute('d',right));}
+    const badge=document.getElementById('lanyard-badge'), cord=document.querySelector('.lanyard-cord'), art=document.querySelector('.hero-art'), rig=badge.parentElement, cordPaths={left:[document.getElementById('cord-left'),document.getElementById('cord-left-stitch')],right:[document.getElementById('cord-right'),document.getElementById('cord-right-stitch')]};
+    let drag=null, tugTimer, roaming=false, tether=null, overlay=null, badgePlaceholder=null, cordPlaceholder=null;
+    function setLanyard(pull=0,sway=0){
+      badge.style.setProperty('--pull-y',`${pull}px`);badge.style.setProperty('--sway',`${sway}deg`);
+      let left,right;
+      if(roaming&&tether){
+        const box=badge.getBoundingClientRect(),y=box.top+7,lx=box.left+box.width*.43,rx=box.left+box.width*.57;
+        const curveY=Math.max(tether.anchorY+24,y-82),midY=(tether.anchorY+curveY)/2;
+        left=`M${tether.leftX} ${tether.anchorY} C${tether.leftX} ${midY} ${lx-26} ${curveY} ${lx} ${y}`;
+        right=`M${tether.rightX} ${tether.anchorY} C${tether.rightX} ${midY} ${rx+26} ${curveY} ${rx} ${y}`;
+      }else{
+        const y=102+pull,lx=151+sway*.35,rx=169+sway*.35;
+        left=`M18 -140 C24 -55 110 ${30+pull*.7} ${lx} ${y}`;
+        right=`M302 -140 C296 -55 210 ${30+pull*.7} ${rx} ${y}`;
+      }
+      cordPaths.left.forEach(path=>path.setAttribute('d',left));cordPaths.right.forEach(path=>path.setAttribute('d',right));
+    }
     function quickTug(){clearTimeout(tugTimer);badge.classList.remove('is-swinging');badge.classList.add('is-dragging');setLanyard(64,7);tugTimer=setTimeout(()=>{badge.classList.remove('is-dragging');setLanyard();badge.classList.add('is-swinging');setTimeout(()=>badge.classList.remove('is-swinging'),680);},360);}
-    function cordAnchor(x,y){const p=cord.createSVGPoint();p.x=x;p.y=y;return p.matrixTransform(cord.getScreenCTM());}
-    function startRoaming(box){if(roaming)return;const leftAnchor=cordAnchor(18,-140),rightAnchor=cordAnchor(302,-140);tether={leftX:leftAnchor.x,rightX:rightAnchor.x,anchorY:leftAnchor.y};roaming=true;art.classList.add('is-roaming');badge.style.left=`${box.left}px`;badge.style.top=`${box.top}px`;badge.classList.add('is-roaming');cord.classList.add('is-roaming');cord.setAttribute('viewBox',`0 0 ${window.innerWidth} ${window.innerHeight}`);}
+    function startRoaming(box){
+      if(roaming)return;
+      const r=rig.getBoundingClientRect(),sx=r.width/320,sy=r.height/420;
+      tether={leftX:r.left+18*sx,rightX:r.left+302*sx,anchorY:Math.max(8,r.top-140*sy)};
+      badgePlaceholder=document.createComment('badge home');cordPlaceholder=document.createComment('lanyard home');
+      badge.before(badgePlaceholder);cord.before(cordPlaceholder);
+      overlay=document.createElement('div');overlay.className='lanyard-overlay';overlay.setAttribute('aria-hidden','true');document.body.append(overlay);overlay.append(cord,badge);
+      roaming=true;art.classList.add('is-roaming');cord.setAttribute('viewBox',`0 0 ${window.innerWidth} ${window.innerHeight}`);
+      badge.style.left=`${box.left}px`;badge.style.top=`${box.top}px`;badge.style.setProperty('--sway','0deg');badge.classList.add('is-roaming');
+    }
     badge.addEventListener('pointerdown',e=>{if(e.target.closest('button,a'))return;e.preventDefault();clearTimeout(tugTimer);badge.classList.remove('is-swinging');const box=badge.getBoundingClientRect();drag={id:e.pointerId,offsetX:e.clientX-box.left,offsetY:e.clientY-box.top,lastX:e.clientX,startX:e.clientX,startY:e.clientY,box,moved:false};badge.classList.add('is-dragging');badge.setPointerCapture(e.pointerId);});
-    window.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const distance=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY);if(!drag.moved&&distance<5)return;e.preventDefault();if(!drag.moved){drag.moved=true;startRoaming(drag.box);}const box=badge.getBoundingClientRect(),left=Math.max(6,Math.min(window.innerWidth-box.width-6,e.clientX-drag.offsetX)),top=Math.max(6,Math.min(window.innerHeight-box.height-6,e.clientY-drag.offsetY)),sway=Math.max(-18,Math.min(18,(e.clientX-drag.lastX)*.7));drag.lastX=e.clientX;badge.style.left=`${left}px`;badge.style.top=`${top}px`;setLanyard(0,sway);},{passive:false,capture:true});
+    window.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const distance=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY);if(!drag.moved&&distance<5)return;e.preventDefault();if(!drag.moved){drag.moved=true;startRoaming(drag.box);}const w=badge.offsetWidth,h=badge.offsetHeight,left=Math.max(6,Math.min(window.innerWidth-w-6,e.clientX-drag.offsetX)),top=Math.max(6,Math.min(window.innerHeight-h-6,e.clientY-drag.offsetY)),sway=Math.max(-18,Math.min(18,(e.clientX-drag.lastX)*.7));drag.lastX=e.clientX;badge.style.left=`${left}px`;badge.style.top=`${top}px`;setLanyard(0,sway);},{passive:false,capture:true});
     function releaseBadge(e){if(!drag||e.pointerId!==drag.id)return;if(!drag.moved){drag=null;badge.classList.remove('is-dragging');setLanyard();return;}dockBadge();}
-    function dockBadge(){if(!roaming)return;drag=null;roaming=false;tether=null;badge.classList.remove('is-dragging','is-roaming');art.classList.remove('is-roaming');cord.classList.remove('is-roaming');cord.setAttribute('viewBox','0 0 320 420');badge.style.removeProperty('left');badge.style.removeProperty('top');setLanyard();badge.classList.add('is-swinging');setTimeout(()=>badge.classList.remove('is-swinging'),680);}
+    function dockBadge(){if(!roaming)return;drag=null;roaming=false;tether=null;badge.classList.remove('is-dragging','is-roaming');art.classList.remove('is-roaming');badge.style.removeProperty('left');badge.style.removeProperty('top');badge.style.removeProperty('--sway');cord.setAttribute('viewBox','0 0 320 420');badgePlaceholder.replaceWith(badge);cordPlaceholder.replaceWith(cord);overlay.remove();overlay=null;badgePlaceholder=null;cordPlaceholder=null;setLanyard();badge.classList.add('is-swinging');setTimeout(()=>badge.classList.remove('is-swinging'),680);}
     badge.addEventListener('dblclick',e=>{if(!e.target.closest('button,a'))dockBadge();});
     window.addEventListener('pointerup',releaseBadge,true);window.addEventListener('pointercancel',releaseBadge,true);badge.addEventListener('lostpointercapture',releaseBadge);
-    badge.addEventListener('keydown',e=>{if(e.target.closest('button,a'))return;if(e.key==='Home'){e.preventDefault();dockBadge();}else if(e.key==='ArrowDown'){e.preventDefault();quickTug();}else if(e.key==='ArrowUp'||e.key==='Escape'){e.preventDefault();clearTimeout(tugTimer);badge.classList.remove('is-dragging');setLanyard();}else if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!e.repeat)quickTug();}});
-    const projects={
+    badge.addEventListener('keydown',e=>{if(e.target.closest('button,a'))return;if(e.key==='Home'){e.preventDefault();dockBadge();}else if(e.key==='ArrowDown'){e.preventDefault();quickTug();}else if(e.key==='ArrowUp'||e.key==='Escape'){e.preventDefault();clearTimeout(tugTimer);badge.classList.remove('is-dragging');setLanyard();}else if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!e.repeat)quickTug();}});    const projects={
       aaima:{kicker:'Personal project · 2025–ongoing',title:'AAIMA — Islamic Fundamentals',summary:'An educational mobile application in development, focused on Islamic fundamentals including Aqidah and Rukun Iman.',image:'assets/aaima.jpg',alt:'AAIMA learning app menu',points:['Building with Flutter and Dart, with SQLite for local and offline access.','Designing reusable UI components and intuitive navigation with Material Design.','Integrating multimedia resources and PDF document handling.'],tags:['Flutter','Dart','SQLite']},
       manabus:{kicker:'Academic project · team of 5',title:'ManaBus — Live Bus Tracking PWA',summary:'A mobile-oriented PWA for discovering bus routes and nearby stops around Kuala Terengganu.',video:'assets/manabus-demo.mp4',poster:'assets/manabus.jpg',points:['Integrated GTFS transit data and REST APIs for route information.','Implemented interactive maps, location-based bus stop discovery, and route searching.','Added favourite routes, weather information, and offline fallback support.'],tags:['JavaScript','Node.js','Express','Leaflet.js','REST APIs']},
       nenek:{kicker:'Team project · team of 3',title:'Nenek Kebayan: Siapa Pengkhianat?',summary:'An online multiplayer mobile game inspired by Malaysian folklore and entered in the UMPSA × HUAWEI GameCenter Mobile Game Competition (UXHMAC 2026).',image:'assets/nenek.jpg',alt:'Nenek Kebayan gameplay instructions',points:['Contributed to the interface and gameplay features.','Worked on character selection, multiplayer lobbies, and hidden-role mechanics.','Built with Godot 4.'],tags:['Godot 4','Game UI','Multiplayer']},
@@ -364,3 +387,4 @@
   </script>
 </body>
 </html>
+
